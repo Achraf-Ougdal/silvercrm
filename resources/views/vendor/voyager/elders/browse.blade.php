@@ -278,26 +278,7 @@
                                 </tbody>
                             </table>
                         </div>
-                      <!--  @if ($isServerSide)
-                            <div class="pull-left">
-                                <div role="status" class="show-res" aria-live="polite">{{ trans_choice(
-                                    'voyager::generic.showing_entries', $dataTypeContent->total(), [
-                                        'from' => $dataTypeContent->firstItem(),
-                                        'to' => $dataTypeContent->lastItem(),
-                                        'all' => $dataTypeContent->total()
-                                    ]) }}</div>
-                            </div>
-                            <div class="pull-right">
-                                {{ $dataTypeContent->appends([
-                                    'elderName' => $search->value,
-                                    'residence' => $search->residence,
-                                    'source' => $search->source,
-                                    'order_by' => $orderBy,
-                                    'sort_order' => $sortOrder,
-                                    'showSoftDeleted' => $showSoftDeleted,
-                                ])->links() }}
-                            </div>
-                        @endif-->
+                 
                     </div>
                 </div>
             </div>
@@ -305,24 +286,7 @@
     </div>
 
     {{-- Single delete modal --}}
-  <!--   <div class="modal modal-danger fade" tabindex="-1" id="delete_modal" role="dialog">
-       <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="{{ __('voyager::generic.close') }}"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title"><i class="voyager-trash"></i> {{ __('voyager::generic.delete_question') }} {{ strtolower($dataType->getTranslatedAttribute('display_name_singular')) }}?</h4>
-                </div>
-                <div class="modal-footer">
-                    <form action="#" id="delete_form" method="POST">
-                        {{ method_field('DELETE') }}
-                        {{ csrf_field() }}
-                        <input type="submit" class="btn btn-danger pull-right delete-confirm" value="{{ __('voyager::generic.delete_confirm') }}">
-                    </form>
-                    <button type="button" class="btn btn-default pull-right" data-dismiss="modal">{{ __('voyager::generic.cancel') }}</button>
-                </div>
-            </div>--><!-- /.modal-content -->
-       <!-- </div>--><!-- /.modal-dialog -->
-    <!--</div>--><!-- /.modal -->
+
 @stop
 
 @section('css')
