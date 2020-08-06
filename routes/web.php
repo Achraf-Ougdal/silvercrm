@@ -27,9 +27,17 @@ Route::group(['prefix' => 'admin'], function () {
     Route::get('pre_checkin','Voyager\ContactController@pre_checkin')->name('checkin.pre');
     Route::post('pre_checkin/verify','Voyager\ContactController@checkin_verify')->name('checkin.verif');
 
-    Route::get('elders/search', 'Voyager\ElderController@search')->name('elder.search');
+    
+
+    Route::get('elder/delete/{id}', 'Voyager\ElderController@search')->name('elder.delete');
+
+    Route::get('elder/addSejour', 'Voyager\ElderController@addSejour')->name('elder.addSejour');
+    Route::get('elder/editSejour', 'Voyager\ElderController@editSejour')->name('elder.editSejour');
 
     Voyager::routes();
+
+    Route::get('elders',['uses' => 'Voyager\ElderController@index',  'as' => 'voyager.elders.index']);
+
    // Route::get('checkin', 'Voyager\ContactController@checkin');
 
 

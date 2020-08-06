@@ -24,58 +24,8 @@ class ElderController extends VoyagerBaseController
 
     use BreadRelationshipParser;
 
-    public function search(Request $request){
-/*
-        $residence_id = null;
-        $source = $_GET['source'] == "source" ? null : $_GET['source'];
-        $elderName = $_GET['elderName'];
+    public function index(Request $request){
 
-        if ($_GET['residence'] != 'residence'){
-        	$residence = App\Residence::where('name', $_GET['residence'])->get('id');
-        	$residence_id = $residence['0']['id'];
-        }
-
-     	if ($residence_id != null && $source != null){
-     		
-     		$elder = App\Elder::where('elder_last_name',$_GET['elderName'])
-     		->where('residence_id',$residence_id)->where('source', $source)
-            ->get();
-
-     	}
-
-     	else if ($residence_id == null && $source != null){
-
-     		$elder = App\Elder::where('elder_last_name',$_GET['elderName'])->where('source', $source)
-            ->get();
-
-     	}
-
-     	else if ($residence_id != null && $source == null){
-     		$elder = App\Elder::where('elder_last_name',$_GET['elderName'])
-     		->where('residence_id',$residence_id)
-            ->get();
-
-     	}
-
-     	else{
-     		$elder = App\Elder::where('elder_last_name',$_GET['elderName'])
-            ->get();
-
-     	}
-
-     	if ($elder->count() == 0){
-     		$data = [
-            	'message'    => 'identifiant introuvable',
-            	'alert-type' => 'error',
-        	];
-        	return redirect()->route("voyager.elders.index")->with($data);
-     	}
-     	
-     	else{
-     		return redirect()->route("voyager.elders.index", compact('residence_id', 'source', 'elderName'));
-     	}
-        
-*/
      	$slug = 'elders';
             
         $residences = DB::select('select * from residences');
@@ -252,6 +202,23 @@ class ElderController extends VoyagerBaseController
             'showCheckboxColumn',
             'residences'
         ));
+    }
+    
+
+    public function delete($id){
+        
+        $elder = Elder::find(1);
+        $elder->delete();
+
+        return redirect()->route('voyager.elder.index');
+    }
+
+    public function addSejour(){
+        return "add Sejour Page";
+    }
+
+    public function editSejour(){
+        return "edit Sejour Page";
     }
     	
 }

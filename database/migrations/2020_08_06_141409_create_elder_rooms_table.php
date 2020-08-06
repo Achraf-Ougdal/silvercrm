@@ -16,10 +16,10 @@ class CreateElderRoomsTable extends Migration
         Schema::create('elder_rooms', function (Blueprint $table) {
             $table->unsignedInteger('room_id');
             $table->unsignedInteger('elder_id');
-            $table->unsignedInteger('tarif');
+            $table->unsignedInteger('tarif')->nullable();
             $table->unsignedInteger('prix');
             $table->date('date_start');
-            $table->date('date_fin');
+            $table->date('date_fin')->nullable();
         });
     }
 
