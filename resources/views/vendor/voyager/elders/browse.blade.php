@@ -50,7 +50,7 @@
                 <div class="panel panel-bordered">
                     <div class="panel-body">
                         @if ($isServerSide)
-                            <form method="get" class="form-search" action="{{route('elder.search')}}">
+                            <form method="get" class="form-search">
                                <div id="search-input">
                                     <div class="col-2">
                                         <select id="residence" name="residence" style="padding-right: 20px; padding-left: 20px;">
@@ -66,12 +66,12 @@
                                     </div>
                                     <div class="col-2">
                                         <select id="source" name="source" style="padding-right: 20px; padding-left: 20px;">
-                                            <option value="source">Source</option>
-                                            <option value="Via Trajectoire">Via Trajectoire</option>
-                                            <option value="Prescripteur hospitalier">Prescripteur hospitalier</option>
-                                            <option value="En direct">En direct</option>
-                                            <option value="Organisme">Organisme</option>
-                                            <option value="Internet">Internet</option>
+                                            <option value="source" @if($search->source == "source") selected @endif>Source</option>
+                                            <option value="Via Trajectoire" @if($search->source == "Via Trajectoire") selected @endif>Via Trajectoire</option>
+                                            <option value="Prescripteur hospitalier" @if($search->source == "Prescripteur hospitalier") selected @endif>Prescripteur hospitalier</option>
+                                            <option value="En direct" @if($search->source == "En direct") selected @endif>En direct</option>
+                                            <option value="Organisme" @if($search->source == "Organisme") selected @endif>Organisme</option>
+                                            <option value="Internet" @if($search->source == "Internet") selected @endif>Internet</option>
                                         </select>
                                     </div>
                                     <div class="input-group col-md-12">
@@ -278,7 +278,26 @@
                                 </tbody>
                             </table>
                         </div>
-                 
+                        @if ($isServerSide)
+                            <div class="pull-left">
+                                <div role="status" class="show-res" aria-live="polite">{{ trans_choice(
+                                    'voyager::generic.showing_entries', $dataTypeContent->total(), [
+                                        'from' => $dataTypeContent->firstItem(),
+                                        'to' => $dataTypeContent->lastItem(),
+                                        'all' => $dataTypeContent->total()
+                                    ]) }}</div>
+                            </div>
+                            <div class="pull-right">
+                                {{ $dataTypeContent->appends([
+                                    'elderName' => $search->value,
+                                    'residence' => $search->residence,
+                                    'source' => $search->source,
+                                    'order_by' => $orderBy,
+                                    'sort_order' => $sortOrder,
+                                    'showSoftDeleted' => $showSoftDeleted,
+                                ])->links() }}
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -286,6 +305,25 @@
     </div>
 
     {{-- Single delete modal --}}
+
+    <div class="modal modal-danger fade" tabindex="-1" id="delete_modal" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="{{ __('voyager::generic.close') }}"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title"><i class="voyager-trash"></i> {{ __('voyager::generic.delete_question') }} {{ strtolower($dataType->getTranslatedAttribute('display_name_singular')) }}?</h4>
+                </div>
+                <div class="modal-footer">
+                    <form action="route('elder.delete')" id="delete_form" method="POST">
+                        {{ method_field('DELETE') }}
+                        {{ csrf_field() }}
+                        <input type="submit" class="btn btn-danger pull-right delete-confirm" value="{{ __('voyager::generic.delete_confirm') }}">
+                    </form>
+                    <button type="button" class="btn btn-default pull-right" data-dismiss="modal">{{ __('voyager::generic.cancel') }}</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
 
 @stop
 
@@ -337,11 +375,11 @@
         });
 
         @if($usesSoftDeletes)
-            @php
+           @php
                 $params = [
-                    's' => $search->value,
-                    'filter' => $search->filter,
-                    'key' => $search->key,
+                    'elderName' => $search->value,
+                    'residence' => $search->residence,
+                    'source' => $search->source,
                     'order_by' => $orderBy,
                     'sort_order' => $sortOrder,
                 ];
@@ -358,7 +396,7 @@
                 })
             })
         @endif
-        $('input[name="row_id"]').on('change', function () {
+       $('input[name="row_id"]').on('change', function () {
             var ids = [];
             $('input[name="row_id"]').each(function() {
                 if ($(this).is(':checked')) {
