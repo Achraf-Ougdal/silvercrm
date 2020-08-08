@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App;
 
 
 class Elder extends Model
@@ -19,7 +20,7 @@ class Elder extends Model
     }
 
     public function elder_rooms(){
-    	return $this->belongsTo(App\Elder_room::class);
+    	return $this->hasOne(App\Elder_room::class);
     }
 
 }

@@ -14,12 +14,14 @@ class CreateElderRoomsTable extends Migration
     public function up()
     {
         Schema::create('elder_rooms', function (Blueprint $table) {
+            $table->id();
             $table->unsignedInteger('room_id');
             $table->unsignedInteger('elder_id');
             $table->unsignedInteger('tarif')->nullable();
-            $table->unsignedInteger('prix');
+            $table->float('prix');
             $table->date('date_start');
             $table->date('date_fin')->nullable();
+            $table->timestamps();
         });
     }
 

@@ -14,11 +14,13 @@ class CreateRoomTarifTable extends Migration
     public function up()
     {
         Schema::create('room_tarif', function (Blueprint $table) {
+            $table->id();
             $table->unsignedInteger('room_id');
             $table->unsignedInteger('category_id');
-            $table->unsignedInteger('tarif');
+            $table->float('tarif');
             $table->date('start_date');
             $table->date('end_date')->nullable();
+            $table->timestamps();
         });
     }
 

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class UpdateElderRoomTable extends Migration
+class UpdateElderRoomsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +14,6 @@ class UpdateElderRoomTable extends Migration
     public function up()
     {
         //
-
          Schema::table('elder_rooms', function (Blueprint $table) {
             
             $table->dropColumn('tarif');
@@ -23,7 +22,6 @@ class UpdateElderRoomTable extends Migration
             $table->string('titleSejour')->after('elder_id');
 
         });
-
     }
 
     /**

@@ -143,8 +143,33 @@
                         <h3 class="panel-title">Séjours de la personne : </h3>
                     </div>
                     <div class="panel-body">
-                    	<a href="{{route('elder.addSejour')}}">Add Sejour</a>
-                        <a href="{{route('elder.editSejour')}}">Edit Sejour</a>
+                        @if(!$dataTypeContent->elder_rooms)
+                            <a href="{{route('elder.addSejour', ['id'=>$dataTypeContent->id])}}">Add Sejour</a><br>
+                        @else
+
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th >Chambre</th>
+                                        <th >Prix</th>
+                                        <th >Date d'entrée</th>
+                                        <th >Date de sortie</th>
+                                        <th ></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr >
+                                        <td >{{$chambre->numero}}</td>
+                                        <td >{{$dataTypeContent->elder_rooms->prix}} € (<span>{{date('F, Y', strtotime($dataTypeContent->elder_rooms->updated_at))}}</span>)</td>
+                                        <td ><span>{{$dataTypeContent->elder_rooms->date_start}}</span></td>
+                                        <td >{{$dataTypeContent->elder_rooms->date_fin ? : '-'}}</td>
+                                        <td >
+                                            <a href="{{route('elder.editSejour', ['id'=>$dataTypeContent->id])}}">modifier</a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        @endif
                     </div>
             	</div>
             	
