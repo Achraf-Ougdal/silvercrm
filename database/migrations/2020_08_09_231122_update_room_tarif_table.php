@@ -18,6 +18,7 @@ class UpdateRoomTarifTable extends Migration
             
             $table->foreign('room_id')->references('id')->on('rooms');
             $table->foreign('category_id')->references('id')->on('room_categories');
+            $table->foreign('residence_id')->references('id')->on('residences');
 
         });
     }

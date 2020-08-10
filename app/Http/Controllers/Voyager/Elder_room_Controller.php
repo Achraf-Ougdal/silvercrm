@@ -69,7 +69,7 @@ class Elder_room_Controller extends Controller
 
                 $data = [
                     'message'    => 'Séjour a été ajouté avec succès',
-                    'alert-type' => 'success',
+                    'alert-type' => 'success'
                 ];
                 return redirect()->route("voyager.elders.show", ['id'=>$request->elderId])->with($data);
 
@@ -79,7 +79,7 @@ class Elder_room_Controller extends Controller
 
                 $data = [
                     'message'    => 'le contrat doit etre sous format pdf',
-                    'alert-type' => 'error',
+                    'alert-type' => 'error'
                 ];
                 return redirect()->route("elder.addSejour", ['id'=>$request->elderId])->with($data);
             }
