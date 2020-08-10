@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1
--- Généré le : sam. 08 août 2020 à 20:40
+-- Généré le : lun. 10 août 2020 à 19:09
 -- Version du serveur :  10.4.11-MariaDB
 -- Version de PHP : 7.4.4
 
@@ -517,7 +517,12 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (41, '2020_08_07_163854_update_elder_room_table', 16),
 (42, '2020_08_08_003858_create_elder_rooms_table', 17),
 (43, '2020_08_08_004029_update_elder_rooms_table', 18),
-(44, '2020_08_08_005459_create_room_tarif_table', 19);
+(44, '2020_08_08_005459_create_room_tarif_table', 19),
+(45, '2020_08_09_185937_update_room_tarif_table', 20),
+(46, '2020_08_09_190431_create_foreignkeys_elder_rooms_table', 21),
+(47, '2020_08_09_231027_create_room_tarif_table', 22),
+(48, '2020_08_09_231122_update_room_tarif_table', 23),
+(49, '2020_08_10_170408_delete_column_rooms_table', 24);
 
 -- --------------------------------------------------------
 
@@ -955,7 +960,6 @@ CREATE TABLE `rooms` (
   `id` int(10) UNSIGNED NOT NULL,
   `numero` tinytext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `type` tinytext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `room_categorie_id` int(11) DEFAULT NULL,
   `date_validite` date DEFAULT NULL,
   `residence_id` int(11) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
@@ -967,9 +971,9 @@ CREATE TABLE `rooms` (
 -- Déchargement des données de la table `rooms`
 --
 
-INSERT INTO `rooms` (`id`, `numero`, `type`, `room_categorie_id`, `date_validite`, `residence_id`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, '100', 'Double', 1, '2019-12-31', 1, '2020-08-03 02:30:28', '2020-08-03 02:44:02', NULL),
-(2, '101', NULL, 2, '2018-12-02', 1, '2020-08-03 02:42:19', '2020-08-03 02:42:19', NULL);
+INSERT INTO `rooms` (`id`, `numero`, `type`, `date_validite`, `residence_id`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(1, '100', 'Double', '2019-12-31', 1, '2020-08-03 02:30:28', '2020-08-03 02:44:02', NULL),
+(2, '101', NULL, '2018-12-02', 1, '2020-08-03 02:42:19', '2020-08-03 02:42:19', NULL);
 
 -- --------------------------------------------------------
 
@@ -1003,6 +1007,7 @@ INSERT INTO `room_categories` (`id`, `name`, `tarif`, `created_at`, `updated_at`
 CREATE TABLE `room_tarif` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `room_id` int(10) UNSIGNED NOT NULL,
+  `residence_id` int(10) UNSIGNED NOT NULL,
   `category_id` int(10) UNSIGNED NOT NULL,
   `tarif` double(8,2) NOT NULL,
   `start_date` date NOT NULL,
@@ -1010,6 +1015,14 @@ CREATE TABLE `room_tarif` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Déchargement des données de la table `room_tarif`
+--
+
+INSERT INTO `room_tarif` (`id`, `room_id`, `residence_id`, `category_id`, `tarif`, `start_date`, `end_date`, `created_at`, `updated_at`) VALUES
+(4, 1, 1, 1, 70.00, '2020-08-07', '2020-08-10', '2020-08-10 15:01:28', '2020-08-10 15:29:09'),
+(5, 1, 1, 2, 1800.00, '2020-08-21', NULL, '2020-08-10 15:29:09', '2020-08-10 15:29:09');
 
 -- --------------------------------------------------------
 
@@ -1191,7 +1204,9 @@ ALTER TABLE `elders`
 -- Index pour la table `elder_rooms`
 --
 ALTER TABLE `elder_rooms`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `elder_rooms_room_id_foreign` (`room_id`),
+  ADD KEY `elder_rooms_elder_id_foreign` (`elder_id`);
 
 --
 -- Index pour la table `failed_jobs`
@@ -1281,7 +1296,10 @@ ALTER TABLE `room_categories`
 -- Index pour la table `room_tarif`
 --
 ALTER TABLE `room_tarif`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `room_tarif_room_id_foreign` (`room_id`),
+  ADD KEY `room_tarif_category_id_foreign` (`category_id`),
+  ADD KEY `room_tarif_residence_id_foreign` (`residence_id`);
 
 --
 -- Index pour la table `settings`
@@ -1381,7 +1399,7 @@ ALTER TABLE `menu_items`
 -- AUTO_INCREMENT pour la table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
 
 --
 -- AUTO_INCREMENT pour la table `permissions`
@@ -1429,7 +1447,7 @@ ALTER TABLE `room_categories`
 -- AUTO_INCREMENT pour la table `room_tarif`
 --
 ALTER TABLE `room_tarif`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT pour la table `settings`
@@ -1460,6 +1478,13 @@ ALTER TABLE `data_rows`
   ADD CONSTRAINT `data_rows_data_type_id_foreign` FOREIGN KEY (`data_type_id`) REFERENCES `data_types` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
+-- Contraintes pour la table `elder_rooms`
+--
+ALTER TABLE `elder_rooms`
+  ADD CONSTRAINT `elder_rooms_elder_id_foreign` FOREIGN KEY (`elder_id`) REFERENCES `elders` (`id`),
+  ADD CONSTRAINT `elder_rooms_room_id_foreign` FOREIGN KEY (`room_id`) REFERENCES `rooms` (`id`);
+
+--
 -- Contraintes pour la table `menu_items`
 --
 ALTER TABLE `menu_items`
@@ -1471,6 +1496,14 @@ ALTER TABLE `menu_items`
 ALTER TABLE `permission_role`
   ADD CONSTRAINT `permission_role_permission_id_foreign` FOREIGN KEY (`permission_id`) REFERENCES `permissions` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `permission_role_role_id_foreign` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`) ON DELETE CASCADE;
+
+--
+-- Contraintes pour la table `room_tarif`
+--
+ALTER TABLE `room_tarif`
+  ADD CONSTRAINT `room_tarif_category_id_foreign` FOREIGN KEY (`category_id`) REFERENCES `room_categories` (`id`),
+  ADD CONSTRAINT `room_tarif_residence_id_foreign` FOREIGN KEY (`residence_id`) REFERENCES `residences` (`id`),
+  ADD CONSTRAINT `room_tarif_room_id_foreign` FOREIGN KEY (`room_id`) REFERENCES `rooms` (`id`);
 
 --
 -- Contraintes pour la table `users`
