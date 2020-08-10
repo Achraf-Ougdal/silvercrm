@@ -187,7 +187,8 @@ class ResidenceController extends VoyagerBaseController
 
                 if ($categorie != null && $type != null){
 
-                	$roomTarifs = App\Room_tarif::where('residence_id', $residence_id)->where('end_date', null)->get();
+                	$chambreCategorie = App\RoomCategory::where('name', $categorie)->get('id');
+                	$roomTarifs = App\Room_tarif::where('residence_id', $residence_id)->where('end_date', null)->where('category_id', $chambreCategorie['0']['id'])->get();
 			    	$roomIds = [];
 			    	
 			    	for ($i=0; $i < count($roomTarifs); $i++) { 
@@ -202,9 +203,7 @@ class ResidenceController extends VoyagerBaseController
 				    		array_push($actualCategories, ["room_id"=>$rt['room_id'], "category"=>$actualCategorySelect['0']['name']]);
 				    	}
 
-
-			    	$chambreCategorie = App\RoomCategory::where('name', $categorie)->get('id');
-			    	$rooms = App\Room::where('residence_id', $residence_id)->where('numero', $request->get('numeroChambre'))->where('type', $type)->where('room_categorie_id', $chambreCategorie['0']['id'])->get();
+			    	$rooms = App\Room::where('residence_id', $residence_id)->where('numero', $request->get('numeroChambre'))->where('type', $type)->whereIn('id', $roomIds)->get();
 			    	$residence = App\Residence::find($residence_id);
 			    	$categories = App\RoomCategory::all();
 
@@ -239,7 +238,9 @@ class ResidenceController extends VoyagerBaseController
 		     	}
 		     	else if ($categorie != null && $type == null){
 
-		     		$roomTarifs = App\Room_tarif::where('residence_id', $residence_id)->where('end_date', null)->get();
+		     		$chambreCategorie = App\RoomCategory::where('name', $categorie)->get('id');
+
+		     		$roomTarifs = App\Room_tarif::where('residence_id', $residence_id)->where('end_date', null)->where('category_id', $chambreCategorie['0']['id'])->get();
 			    	$roomIds = [];
 			    	
 			    	for ($i=0; $i < count($roomTarifs); $i++) { 
@@ -253,9 +254,8 @@ class ResidenceController extends VoyagerBaseController
 				    		$actualCategorySelect = App\RoomCategory::where('id', $rt['category_id'])->get();
 				    		array_push($actualCategories, ["room_id"=>$rt['room_id'], "category"=>$actualCategorySelect['0']['name']]);
 				    	}
-
-			    	$chambreCategorie = App\RoomCategory::where('name', $categorie)->get('id');
-			    	$rooms = App\Room::where('residence_id', $residence_id)->where('numero', $request->get('numeroChambre'))->where('room_categorie_id', $chambreCategorie['0']['id'])->get();
+				    	 	
+			    	$rooms = App\Room::where('residence_id', $residence_id)->where('numero', $request->get('numeroChambre'))->whereIn('id', $roomIds)->get();
 			    	$residence = App\Residence::find($residence_id);
 			    	$categories = App\RoomCategory::all();
 

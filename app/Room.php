@@ -19,8 +19,6 @@ class Room extends Model
 		return $this->belongsTo(App\Residence::class);
 	}
 
-	public function roomCategory(){
-		return $this->belongsTo(App\RoomCategory::class, 'room_categorie_id');
-	}
+	
 
 }

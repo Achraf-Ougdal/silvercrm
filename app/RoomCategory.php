@@ -13,7 +13,4 @@ class RoomCategory extends Model
 		return $this->hasMany(App\Room_tarif::class);
 	}
 
-	public function rooms(){
-    	return $this->hasMany(App\Room::class);
-    }
 }
